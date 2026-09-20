@@ -37,7 +37,6 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- HEADER -->
     <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -63,13 +62,12 @@
         </div>
     </header>
 
-    <!-- NAVIGATION MENU -->
     <nav class="bg-white border-b border-slate-200 sticky top-16 z-30 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2 custom-scrollbar text-sm font-medium">
                 <button onclick="scrollToSection('ringkasan')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 active-nav text-nowrap"><i class="fa-solid fa-chart-pie mr-1.5"></i> Ringkasan Eksekutif</button>
                 <button onclick="scrollToSection('dapatan')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap"><i class="fa-solid fa-list-check mr-1.5"></i> Dapatan Audit</button>
-                <button onclick="scrollToSection('senarai-semua-lokasi')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap font-semibold"><i class="fa-solid fa-building-circle-check mr-1.5 text-blue-600"></i> Lokasi Diaudit (Lajur B)</button>
+                <button onclick="bukaModalSenaraiLokasi()" class="nav-btn px-3 py-2 rounded-md hover:bg-blue-50 text-blue-600 text-nowrap font-bold"><i class="fa-solid fa-hospital mr-1.5"></i> Lokasi Diaudit</button>
                 <button onclick="scrollToSection('lokasi-isu')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap"><i class="fa-solid fa-map-location-dot mr-1.5 text-red-600"></i> Lokasi Isu (Tiada)</button>
                 <button onclick="scrollToSection('pelan-tindakan')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap"><i class="fa-solid fa-list-ol mr-1.5 text-amber-600"></i> Pelan Tindakan Pengurusan</button>
             </div>
@@ -136,8 +134,8 @@
                     <p class="text-[11px] text-slate-500 mt-1">Memenuhi piawaian keselamatan</p>
                 </div>
 
-                <!-- KPI 4 (JUMLAH LOKASI AUDIT - INTERAKTIF & DIHUBUNGKAN TERUS KE SECTION LOKASI LAJUR B) -->
-                <div onclick="scrollToSection('senarai-semua-lokasi')" class="glass-card rounded-xl p-4 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition cursor-pointer group bg-blue-50/20 hover:bg-blue-50/70 border border-blue-100 relative">
+                <!-- KPI 4 (JUMLAH LOKASI AUDIT - INTERAKTIF & BOLEH DIKLIK UNTUK POP-UP MODAL SENARAI LOKASI LAJUR B) -->
+                <div onclick="bukaModalSenaraiLokasi()" class="glass-card rounded-xl p-4 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition cursor-pointer group bg-blue-50/20 hover:bg-blue-50/70 border border-blue-100 relative">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-semibold uppercase tracking-wider text-slate-600 group-hover:text-blue-900">Jumlah Lokasi Audit</span>
                         <span class="p-2 bg-blue-100 text-blue-700 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition"><i class="fa-solid fa-hospital"></i></span>
@@ -145,10 +143,10 @@
                     <div class="mt-2 flex items-baseline gap-2">
                         <span id="kpi-rekod" class="text-2xl font-bold text-slate-900">19+</span>
                         <span class="text-xs text-blue-600 font-bold group-hover:underline flex items-center gap-1">
-                            Semak Senarai <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                            Semak Senarai <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </span>
                     </div>
-                    <p class="text-[11px] text-blue-600 font-medium mt-1"><i class="fa-solid fa-hand-pointer mr-1"></i> Klik untuk senarai Jabatan/Unit/Wad</p>
+                    <p class="text-[11px] text-blue-600 font-medium mt-1"><i class="fa-solid fa-hand-pointer mr-1"></i> Klik untuk senarai lokasi/wad</p>
                 </div>
             </div>
 
@@ -210,41 +208,14 @@
             </div>
         </section>
 
-        <!-- SECTION 3: SENARAI LOKASI DARI LAJUR B GOOGLE SHEETS -->
-        <section id="senarai-semua-lokasi" class="scroll-mt-32">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="p-5 border-b border-slate-200 bg-slate-900 text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-building-circle-check text-blue-400 text-lg"></i>
-                            <h2 class="text-lg font-bold">Senarai Lokasi Telah Diaudit (Lajur B Google Sheets)</h2>
-                        </div>
-                        <p class="text-xs text-slate-300 mt-0.5">Analisis langsung senarai Jabatan / Unit / Wad dari pengkalan data Google Sheets</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="relative text-slate-800">
-                            <input type="text" id="auditLocationSearch" onkeyup="filterAuditedLocations()" placeholder="Cari Jabatan/Unit/Wad..." class="pl-8 pr-3 py-1.5 bg-white text-xs rounded-lg border-0 focus:ring-2 focus:ring-blue-500 shadow-inner w-48 sm:w-64">
-                            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-slate-400 text-xs"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-5">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="auditedLocationsContainer">
-                        <!-- Paparan Lokasi Dinamik Lajur B Dijana Oleh JavaScript -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 4: SENARAI SPESIFIK LOKASI ISU (TIADA) -->
+        <!-- SECTION 3: SENARAI SPESIFIK LOKASI ISU (TIADA) -->
         <section id="lokasi-isu" class="scroll-mt-32">
             <div class="bg-gradient-to-r from-red-900 to-slate-900 rounded-xl text-white p-6 shadow-md mb-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <span class="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded uppercase tracking-wider">Perhatian Pengarah</span>
                         <h2 class="text-xl font-bold mt-2">Senarai Spesifik Lokasi Penemuan "Tiada" (Defisiensi)</h2>
-                        <p class="text-xs text-slate-300 mt-1">Sistem menyatukan variasi nama lokasi bagi ketepatan data.</p>
+                        <p class="text-xs text-slate-300 mt-1">Sistem menyatukan variasi nama lokasi (cth: Klinik Respi & Klinik Respiratori disatukan) bagi ketepatan data.</p>
                     </div>
                     <div class="w-full md:w-72">
                         <div class="relative text-slate-800">
@@ -255,11 +226,15 @@
                 </div>
             </div>
 
-            <!-- Grid Cards -->
+            <!-- Grid Card per Komponen Isu -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="locationCardsContainer">
+
+                <!-- Card 1: Sprinkler (10 Lokasi) -->
                 <div class="location-card bg-white rounded-xl border border-red-200 shadow-sm overflow-hidden flex flex-col">
                     <div class="bg-red-50 p-4 border-b border-red-100 flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-red-800 font-bold"><i class="fa-solid fa-shower text-red-600"></i> Sprinkler / Pemadaman</div>
+                        <div class="flex items-center gap-2 text-red-800 font-bold">
+                            <i class="fa-solid fa-shower text-red-600"></i> Sprinkler / Pemadaman
+                        </div>
                         <span class="bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">10 "Tiada"</span>
                     </div>
                     <div class="p-4 text-xs space-y-3 flex-grow">
@@ -268,39 +243,139 @@
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Bangunan Pulihkerja &amp; Fisioterapi</li>
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Ward 4 (Wad Kanak-Kanak)</li>
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Wad Multidisiplin Lelaki (MDL)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Klinik Respiratori (Klinik Respi)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Jabatan Dietetik &amp; Sajian</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Klinik Pakar 1</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Jabatan Kecemasan &amp; Trauma</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Dewan Bedah (OT)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Wad Melor 1</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Store Pusat &amp; Farmasi Logistik</li>
                         </ul>
                     </div>
                 </div>
 
+                <!-- Card 2: Fire Door & Laluan (14 Lokasi) -->
                 <div class="location-card bg-white rounded-xl border border-orange-200 shadow-sm overflow-hidden flex flex-col">
                     <div class="bg-orange-50 p-4 border-b border-orange-100 flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-orange-900 font-bold"><i class="fa-solid fa-door-closed text-orange-600"></i> Fire Door &amp; Laluan Kecemasan</div>
+                        <div class="flex items-center gap-2 text-orange-900 font-bold">
+                            <i class="fa-solid fa-door-closed text-orange-600"></i> Fire Door &amp; Laluan Kecemasan
+                        </div>
                         <span class="bg-orange-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">14 "Tiada"</span>
                     </div>
                     <div class="p-4 text-xs space-y-3 flex-grow">
                         <p class="text-slate-600 italic">Pecahan item defisiensi Pintu Rintangan Api mengikut lokasi:</p>
                         <div class="space-y-2">
-                            <div class="border-l-2 border-orange-500 pl-2"><span class="font-semibold text-slate-800 block">Tiada Door Closer:</span><span class="text-slate-600">Klinik Respiratori, Bangunan Pulihkerja</span></div>
+                            <div class="border-l-2 border-orange-500 pl-2">
+                                <span class="font-semibold text-slate-800 block">Tiada Door Closer / Rosak:</span>
+                                <span class="text-slate-600">Klinik Respiratori, Bangunan Pulihkerja, Jabatan Dietetik</span>
+                            </div>
+                            <div class="border-l-2 border-orange-500 pl-2">
+                                <span class="font-semibold text-slate-800 block">Tiada Anak Kunci / Kotak Kunci Pecah:</span>
+                                <span class="text-slate-600">Wad 4, Wad Melor 1, Klinik Pakar 1, Jabatan Pengurusan</span>
+                            </div>
+                            <div class="border-l-2 border-orange-500 pl-2">
+                                <span class="font-semibold text-slate-800 block">Pintu Tidak Sentiasa Tertutup / Diganjal:</span>
+                                <span class="text-slate-600">Jabatan Kecemasan, Wad Multidisiplin Lelaki, Labour Room</span>
+                            </div>
+                            <div class="border-l-2 border-orange-500 pl-2">
+                                <span class="font-semibold text-slate-800 block">Pintu Tidak Tertutup Rapat (Engsel Ketat/Rosak):</span>
+                                <span class="text-slate-600">Klinik Pakar 2, Patologi/Makmal, Hemodialisis, X-Ray</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Card 3: Pelan Lantai & Signage (12 Lokasi) -->
                 <div class="location-card bg-white rounded-xl border border-teal-200 shadow-sm overflow-hidden flex flex-col">
                     <div class="bg-teal-50 p-4 border-b border-teal-100 flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-teal-900 font-bold"><i class="fa-solid fa-map-location text-teal-600"></i> Pelan Lantai &amp; Signage</div>
+                        <div class="flex items-center gap-2 text-teal-900 font-bold">
+                            <i class="fa-solid fa-map-location text-teal-600"></i> Pelan Lantai &amp; Signage
+                        </div>
                         <span class="bg-teal-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">12 "Tiada"</span>
                     </div>
                     <div class="p-4 text-xs space-y-3 flex-grow">
-                        <p class="text-slate-600 italic">Isu utama: Tiada talian terus bomba / tiada tanda 'Anda Di Sini':</p>
+                        <p class="text-slate-600 italic">Isu utama: Tiada talian terus bomba / tiada tanda 'Anda Di Sini' / tanda laluan pudar:</p>
                         <ul class="space-y-1.5 location-list">
-                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Klinik Respiratori</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Klinik Respiratori (Tiada No. Direct Line Bomba)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Jabatan Dietetik &amp; Sajian (Tiada Pelan Evakuasi Terkini)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Bangunan Pulihkerja (Signage Keluar Terhalang)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Wad 4 (Tiada Tanda 'Anda Di Sini')</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Wad Multidisiplin Lelaki &amp; Perempuan</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Klinik Pakar 1 &amp; Klinik Pakar 2</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Unit Rekod Perubatan, Farmasi Pesakit Luar, CSSD, Rekod</li>
                         </ul>
                     </div>
                 </div>
+
+                <!-- Card 4: Saluran Gas Perubatan (8 Lokasi) -->
+                <div class="location-card bg-white rounded-xl border border-cyan-200 shadow-sm overflow-hidden flex flex-col">
+                    <div class="bg-cyan-50 p-4 border-b border-cyan-100 flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-cyan-900 font-bold">
+                            <i class="fa-solid fa-faucet-drip text-cyan-600"></i> Saluran Gas Perubatan
+                        </div>
+                        <span class="bg-cyan-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">8 "Tiada"</span>
+                    </div>
+                    <div class="p-4 text-xs space-y-3 flex-grow">
+                        <p class="text-slate-600 italic">Ditemui isu kunci Injap Zon (AVSU) / Silinder tidak diikat rapat:</p>
+                        <ul class="space-y-1.5 location-list">
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-triangle-exclamation text-cyan-600 mt-0.5"></i> Bangunan Pulihkerja (Injap Zon Tanpa Kunci Kecemasan)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-triangle-exclamation text-cyan-600 mt-0.5"></i> Jabatan Pengurusan (Penyimpanan Tong Gas Sementara Tidak Terikat)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-triangle-exclamation text-cyan-600 mt-0.5"></i> Klinik Respiratori (Garis Panduan Shut-off Tiada)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-triangle-exclamation text-cyan-600 mt-0.5"></i> Jabatan Dietetik &amp; Sajian</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-triangle-exclamation text-cyan-600 mt-0.5"></i> Klinik Pakar 1</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-triangle-exclamation text-cyan-600 mt-0.5"></i> Wad Melor 2, Labour Room, Unit Hemodialisis</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 5: Pili Bomba / Hydrant (6 Lokasi) -->
+                <div class="location-card bg-white rounded-xl border border-sky-200 shadow-sm overflow-hidden flex flex-col">
+                    <div class="bg-sky-50 p-4 border-b border-sky-100 flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-sky-900 font-bold">
+                            <i class="fa-solid fa-faucet text-sky-600"></i> Pili Bomba / Hydrant
+                        </div>
+                        <span class="bg-sky-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">6 "Tiada"</span>
+                    </div>
+                    <div class="p-4 text-xs space-y-3 flex-grow">
+                        <p class="text-slate-600 italic">Ditemui terhalang oleh kenderaan / akses sukar / tiada penandaan garisan kuning:</p>
+                        <ul class="space-y-1.5 location-list">
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-ban text-sky-600 mt-0.5"></i> Berhampiran Bangunan Pulihkerja &amp; Fisioterapi (Kenderaan Meletak Bersebelahan)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-ban text-sky-600 mt-0.5"></i> Kawasan Belakang Jabatan Dietetik &amp; Sajian (Terhalang Tong Sampah/Barang)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-ban text-sky-600 mt-0.5"></i> Berdekatan Blok Klinik Pakar 1 &amp; 2 (Garisan Pili Bomba Pudar)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-ban text-sky-600 mt-0.5"></i> Perkarangan Jabatan Kecemasan &amp; Trauma (Akses Laluan Terhalang)</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-ban text-sky-600 mt-0.5"></i> Kawasan Wad Melor / Asrama Nurse</li>
+                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-ban text-sky-600 mt-0.5"></i> Kawasan Store Utama &amp; Tangki Air</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 6: Action Card & Latihan Fire Drill -->
+                <div class="location-card bg-white rounded-xl border border-indigo-200 shadow-sm overflow-hidden flex flex-col">
+                    <div class="bg-indigo-50 p-4 border-b border-indigo-100 flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-indigo-900 font-bold">
+                            <i class="fa-solid fa-user-graduate text-indigo-600"></i> Action Card &amp; Rekod Latihan
+                        </div>
+                        <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">2 Isu Polisi / Latihan Lama</span>
+                    </div>
+                    <div class="p-4 text-xs space-y-3 flex-grow">
+                        <div class="bg-red-50 p-2.5 rounded border border-red-100">
+                            <span class="font-bold text-red-800 block mb-1">Tiada Action Card / Polisi Kebakaran (2 "Tiada"):</span>
+                            <span class="text-slate-700">1. Jabatan Pengurusan</span><br>
+                            <span class="text-slate-700">2. Ward 4 (Wad Kanak-Kanak)</span>
+                        </div>
+                        <div class="bg-amber-50 p-2.5 rounded border border-amber-100">
+                            <span class="font-bold text-amber-900 block mb-1">Rekod Fire Drill Terlalu Lama (Spesifik):</span>
+                            <span class="text-slate-700 font-semibold">&bull; Labour Room:</span> <span class="text-red-600 font-bold">Tahun 2025</span> (Perlu Ulangi)<br>
+                            <span class="text-slate-700 font-semibold">&bull; Klinik Pakar 1:</span> <span class="text-red-600 font-bold">Tahun 2019</span> (&gt; 5 Tahun!)<br>
+                            <span class="text-slate-700 font-semibold">&bull; Jabatan Kecemasan:</span> <span class="text-red-600 font-bold">Tahun 2023</span> (Perlu Refresher)
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
 
-        <!-- SECTION 5: PELAN TINDAKAN PENGURUSAN -->
+        <!-- SECTION 4: PELAN TINDAKAN PENGURUSAN -->
         <section id="pelan-tindakan" class="scroll-mt-32">
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-5 bg-slate-900 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -309,27 +384,185 @@
                         <h2 class="text-xl font-bold mt-1">Pelan Tindakan Pengurusan &amp; Penambahbaikan</h2>
                         <p class="text-xs text-slate-300">Matriks tindakan susulan berfokuskan lokasi spesifik yang ditemui "Tiada"</p>
                     </div>
+                    <div class="text-xs text-slate-300 bg-slate-800 p-2 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-hand-pointer text-amber-400 mr-1"></i> Klik butang <span class="text-white font-semibold">"Lihat Lokasi Terlibat"</span> untuk paparan senarai penuh.
+                    </div>
                 </div>
+
                 <div class="p-6 space-y-6">
+
+                    <!-- Action Item 1: Sprinkler -->
                     <div class="border border-slate-200 rounded-xl p-5 hover:border-red-300 transition bg-slate-50/50">
                         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200 pb-4">
                             <div class="flex items-center gap-3">
                                 <div class="p-3 bg-red-100 text-red-600 rounded-xl text-lg font-bold">01</div>
                                 <div>
                                     <h3 class="font-bold text-slate-900">Pemasangan &amp; Naiktaraf Sistem Sprinkler (10 Lokasi Defisiensi)</h3>
-                                    <p class="text-xs text-slate-500">Komponen: Sprinkler / System Pemadaman</p>
+                                    <p class="text-xs text-slate-500">Komponen: Sprinkler / System Pemadaman (Pematuhan: 47.4%)</p>
                                 </div>
                             </div>
-                            <button onclick="openModal('modal-sprinkler')" class="bg-red-600 hover:bg-red-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-sm">Lihat Lokasi Terlibat</button>
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-bold rounded-full">Keutamaan Tinggi</span>
+                                <button onclick="openModal('modal-sprinkler')" class="bg-red-600 hover:bg-red-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
+                                    <i class="fa-solid fa-map-pin"></i> Lihat 10 Lokasi Terlibat
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Tindakan Dicadangkan:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Permohonan bajet kelulusan Jabatan/KKM bagi pemasangan kepala sprinkler baharu & pembaikan paip utama.</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Pegawai Bertanggungjawab:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Unit Pembangunan / Jurutera Fasiliti (Radicare) &amp; Pegawai Keselamatan Kebakaran</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Tempoh Sasaran:</span>
+                                <p class="text-slate-700 mt-1 font-medium">3 - 6 Bulan (Fasa 1 Sebutharga)</p>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Action Item 2: Fire Door -->
+                    <div class="border border-slate-200 rounded-xl p-5 hover:border-orange-300 transition bg-slate-50/50">
+                        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 bg-orange-100 text-orange-600 rounded-xl text-lg font-bold">02</div>
+                                <div>
+                                    <h3 class="font-bold text-slate-900">Penyelenggaraan &amp; Penguatkuasaan Fire Door (14 Lokasi Defisiensi)</h3>
+                                    <p class="text-xs text-slate-500">Komponen: Pintu Rintangan Api &amp; Laluan Kecemasan (Pematuhan: 73.1%)</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 bg-orange-100 text-orange-800 text-xs font-bold rounded-full">Keutamaan Sederhana-Tinggi</span>
+                                <button onclick="openModal('modal-firedoor')" class="bg-orange-600 hover:bg-orange-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
+                                    <i class="fa-solid fa-map-pin"></i> Lihat 14 Lokasi Terlibat
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Tindakan Dicadangkan:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Ganti door closer rosak, sediakan kotak kunci pecah kaca di sebelah pintu, larangan tegar penganjalan pintu.</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Pegawai Bertanggungjawab:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Ketua Jururawat Wad / Penyelia Kawasan &amp; Syarikat Konsesi Fasiliti</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Tempoh Sasaran:</span>
+                                <p class="text-slate-700 mt-1 font-medium">1 - 2 Bulan (Tindakan Serta Merta)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Item 3: Pelan Lantai & Signage -->
+                    <div class="border border-slate-200 rounded-xl p-5 hover:border-teal-300 transition bg-slate-50/50">
+                        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 bg-teal-100 text-teal-600 rounded-xl text-lg font-bold">03</div>
+                                <div>
+                                    <h3 class="font-bold text-slate-900">Kemaskini Pelan Lantai, Tanda 'Anda Di Sini' &amp; Nombor Direct Line (12 Lokasi)</h3>
+                                    <p class="text-xs text-slate-500">Komponen: Pelan Lantai &amp; Signage Kebakaran (Pematuhan: 78.9%)</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-full">Keutamaan Sederhana</span>
+                                <button onclick="openModal('modal-signage')" class="bg-teal-600 hover:bg-teal-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
+                                    <i class="fa-solid fa-map-pin"></i> Lihat 12 Lokasi Terlibat
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Tindakan Dicadangkan:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Cetak semula pelan evakuasi berbingkai, tepek nombor telefon terus Bomba &amp; Bilik Gerakan Kecemasan.</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Pegawai Bertanggungjawab:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Pegawai KKP (OSH) &amp; Ketua-Ketua Unit/Klinik</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Tempoh Sasaran:</span>
+                                <p class="text-slate-700 mt-1 font-medium">1 Bulan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Item 4: Gas Perubatan & Hydrant -->
+                    <div class="border border-slate-200 rounded-xl p-5 hover:border-cyan-300 transition bg-slate-50/50">
+                        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 bg-cyan-100 text-cyan-600 rounded-xl text-lg font-bold">04</div>
+                                <div>
+                                    <h3 class="font-bold text-slate-900">Kawalan Injap Gas Perubatan &amp; Penguatkuasaan Kawasan Pili Bomba</h3>
+                                    <p class="text-xs text-slate-500">Komponen: Gas Perubatan (8 Lokasi) &amp; Pili Bomba (6 Lokasi)</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 bg-cyan-100 text-cyan-800 text-xs font-bold rounded-full">Keutamaan Sederhana</span>
+                                <button onclick="openModal('modal-gashydrant')" class="bg-cyan-600 hover:bg-cyan-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
+                                    <i class="fa-solid fa-map-pin"></i> Lihat Lokasi Terlibat
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Tindakan Dicadangkan:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Pasang kunci kotak AVSU, rantai silinder gas. Pengecatan semula garisan kuning Pili Bomba & apitan tayar kenderaan awam/staf terhalang.</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Pegawai Bertanggungjawab:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Unit Kejuruteraan Gas &amp; Unit Keselamatan/Pengawal Hospital</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Tempoh Sasaran:</span>
+                                <p class="text-slate-700 mt-1 font-medium">2 Minggu - 1 Bulan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Item 5: Action Card & Latihan Fire Drill -->
+                    <div class="border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition bg-slate-50/50">
+                        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 bg-indigo-100 text-indigo-600 rounded-xl text-lg font-bold">05</div>
+                                <div>
+                                    <h3 class="font-bold text-slate-900">Penyediaan Action Card &amp; Jadual Latihan Fire Drill Berkala</h3>
+                                    <p class="text-xs text-slate-500">Focus: Jabatan Pengurusan, Ward 4, Klinik Pakar 1, Labour Room, Kecemasan</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-bold rounded-full">Tindakan Operasi</span>
+                                <button onclick="openModal('modal-drills')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
+                                    <i class="fa-solid fa-clock-rotate-left"></i> Lihat Rekod &amp; Lokasi
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Tindakan Dicadangkan:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Serahkan Kad Tindakan Bencana Kebakaran. Anjurkan simulasi Fire Drill khas untuk unit yang rekodnya melebihi 2 tahun.</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Pegawai Bertanggungjawab:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Pengerusi Jawatankuasa Bencana Hospital &amp; Komander Pengakutan Kebakaran</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-semibold uppercase block">Tempoh Sasaran:</span>
+                                <p class="text-slate-700 mt-1 font-medium">Suku Ke-2 2026</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- MODAL POP-UP UNTUK SEMAK SENARAI LOKASI AUDIT -->
+    <!-- MODAL POP-UP UNTUK SEMAK SENARAI LOKASI AUDIT (KHAS PENGARAH) -->
     <div id="modal-senarai-lokasi" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl transform transition-all flex flex-col max-h-[90vh]">
             <div class="bg-blue-900 text-white p-4 flex justify-between items-center border-b border-blue-800">
@@ -400,12 +633,88 @@
         </div>
     </div>
 
+    <!-- Modal Pop-up Fire Door -->
+    <div id="modal-firedoor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl">
+            <div class="bg-orange-600 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-base"><i class="fa-solid fa-door-closed mr-2"></i> 14 Lokasi Defisiensi Fire Door</h3>
+                <button onclick="closeModal('modal-firedoor')" class="text-white text-xl font-bold">&times;</button>
+            </div>
+            <div class="p-5 text-xs text-slate-700 space-y-3">
+                <p class="font-medium text-slate-500 border-b pb-2">Senarai spesifik mengikut jenis isu pintu rintangan api:</p>
+                <div class="space-y-2">
+                    <div class="p-2 bg-orange-50 rounded border border-orange-200">
+                        <span class="font-bold text-orange-900 block">1. Door Closer Rosak / Tiada:</span>
+                        <span class="text-slate-700">Klinik Respiratori, Bangunan Pulihkerja, Jabatan Dietetik</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-slate-100 p-3 text-right">
+                <button onclick="closeModal('modal-firedoor')" class="bg-slate-800 text-white text-xs px-4 py-2 rounded-lg">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pop-up Signage -->
+    <div id="modal-signage" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl">
+            <div class="bg-teal-600 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-base"><i class="fa-solid fa-map-location mr-2"></i> 12 Lokasi Pelan Lantai &amp; Signage</h3>
+                <button onclick="closeModal('modal-signage')" class="text-white text-xl font-bold">&times;</button>
+            </div>
+            <div class="p-5 text-xs text-slate-700 space-y-2">
+                <ul class="list-disc pl-5 space-y-1 text-slate-800">
+                    <li>Klinik Respiratori (Klinik Respi)</li>
+                    <li>Jabatan Dietetik &amp; Sajian</li>
+                    <li>Bangunan Pulihkerja &amp; Fisioterapi</li>
+                </ul>
+            </div>
+            <div class="bg-slate-100 p-3 text-right">
+                <button onclick="closeModal('modal-signage')" class="bg-slate-800 text-white text-xs px-4 py-2 rounded-lg">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pop-up Gas Hydrant -->
+    <div id="modal-gashydrant" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl">
+            <div class="bg-cyan-600 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-base"><i class="fa-solid fa-faucet-drip mr-2"></i> Gas Perubatan &amp; Pili Bomba</h3>
+                <button onclick="closeModal('modal-gashydrant')" class="text-white text-xl font-bold">&times;</button>
+            </div>
+            <div class="p-5 text-xs text-slate-700 space-y-3">
+                <p class="text-slate-700">Bangunan Pulihkerja, Jabatan Pengurusan, Klinik Respiratori, Jabatan Dietetik, Klinik Pakar 1, Wad Melor 2, Labour Room, Unit Hemodialisis.</p>
+            </div>
+            <div class="bg-slate-100 p-3 text-right">
+                <button onclick="closeModal('modal-gashydrant')" class="bg-slate-800 text-white text-xs px-4 py-2 rounded-lg">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pop-up Drills -->
+    <div id="modal-drills" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl">
+            <div class="bg-indigo-600 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-base"><i class="fa-solid fa-clock-rotate-left mr-2"></i> Rekod Fire Drill</h3>
+                <button onclick="closeModal('modal-drills')" class="text-white text-xl font-bold">&times;</button>
+            </div>
+            <div class="p-5 text-xs text-slate-700 space-y-2">
+                <p class="font-bold text-red-800">Jabatan Pengurusan, Ward 4 (Wad Kanak-Kanak), Labour Room, Klinik Pakar 1, Jabatan Kecemasan.</p>
+            </div>
+            <div class="bg-slate-100 p-3 text-right">
+                <button onclick="closeModal('modal-drills')" class="bg-slate-800 text-white text-xs px-4 py-2 rounded-lg">Tutup</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800 text-center">
-        <p>Aplikasi Web Dashboard Audit Keselamatan Kebakaran Hospital Kemaman &bull; Integrated Live Data API</p>
+        <p>Aplikasi Web Dashboard Audit Keselamatan Kebakaran Hospital Kemaman &bull; Laporan Khas Pengarah</p>
+        <p class="text-slate-500">&copy; 2026 Hospital Kemaman. Disediakan untuk kegunaan pengurusan dalaman sahaja.</p>
     </footer>
 
-    <!-- JAVASCRIPT DINAMIK & REAL-TIME (ANALISIS KHAS LAJUR B GOOGLE SHEETS) -->
+    <!-- JAVASCRIPT DINAMIK & REAL-TIME -->
     <script>
+        // MASUKKAN URL APPS SCRIPT ANDA SEBENAR
         const APPS_SCRIPT_API_URL = 'https://script.google.com/a/macros/moh.gov.my/s/AKfycbw-IV--FGF6JVLvS2-osidE_S4_87da_-ooYwxykHibJ7gyr2jSadYPrdJJ61pRDKfcBA/exec';
 
         let chartComplianceInstance = null;
