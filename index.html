@@ -69,7 +69,7 @@
             <div class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2 custom-scrollbar text-sm font-medium">
                 <button onclick="scrollToSection('ringkasan')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 active-nav text-nowrap"><i class="fa-solid fa-chart-pie mr-1.5"></i> Ringkasan Eksekutif</button>
                 <button onclick="scrollToSection('dapatan')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap"><i class="fa-solid fa-list-check mr-1.5"></i> Dapatan Audit</button>
-                <button onclick="scrollToSection('senarai-semua-lokasi')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap"><i class="fa-solid fa-building-circle-check mr-1.5 text-blue-600"></i> Lokasi Diaudit</button>
+                <button onclick="scrollToSection('senarai-semua-lokasi')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap font-semibold"><i class="fa-solid fa-building-circle-check mr-1.5 text-blue-600"></i> Lokasi Diaudit</button>
                 <button onclick="scrollToSection('lokasi-isu')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap"><i class="fa-solid fa-map-location-dot mr-1.5 text-red-600"></i> Lokasi Isu (Tiada)</button>
                 <button onclick="scrollToSection('pelan-tindakan')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap"><i class="fa-solid fa-list-ol mr-1.5 text-amber-600"></i> Pelan Tindakan Pengurusan</button>
             </div>
@@ -136,17 +136,19 @@
                     <p class="text-[11px] text-slate-500 mt-1">Memenuhi piawaian keselamatan</p>
                 </div>
 
-                <!-- KPI 4 -->
-                <div class="glass-card rounded-xl p-4 border-l-4 border-l-blue-500 shadow-sm">
+                <!-- KPI 4 (JUMLAH LOKASI AUDIT - INTERAKTIF & DIHUBUNGKAN TERUS KE SECTION LOKASI) -->
+                <div onclick="scrollToSection('senarai-semua-lokasi')" class="glass-card rounded-xl p-4 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition cursor-pointer group bg-blue-50/20 hover:bg-blue-50/70 border border-blue-100">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Jumlah Rekod Data</span>
-                        <span class="p-2 bg-blue-100 text-blue-700 rounded-lg"><i class="fa-solid fa-hospital"></i></span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-600 group-hover:text-blue-900">Jumlah Lokasi Audit</span>
+                        <span class="p-2 bg-blue-100 text-blue-700 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition"><i class="fa-solid fa-hospital"></i></span>
                     </div>
                     <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-rekod" class="text-2xl font-bold text-slate-900">223</span>
-                        <span class="text-xs text-blue-600 font-medium">Entri Google Sheets</span>
+                        <span id="kpi-rekod" class="text-2xl font-bold text-slate-900">19+</span>
+                        <span class="text-xs text-blue-600 font-bold group-hover:underline flex items-center gap-1">
+                            Semak Senarai <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                        </span>
                     </div>
-                    <p class="text-[11px] text-slate-500 mt-1">Diproses secara automatik</p>
+                    <p class="text-[11px] text-blue-600 font-medium mt-1"><i class="fa-solid fa-hand-pointer mr-1"></i> Klik untuk senarai lokasi/wad</p>
                 </div>
             </div>
 
@@ -206,7 +208,7 @@
             </div>
         </section>
 
-        <!-- SECTION BARU: SENARAI LOKASI YANG TAH DIDAUDIT -->
+        <!-- SECTION BARU: SENARAI LOKASI YANG TELAH DIAUDIT -->
         <section id="senarai-semua-lokasi" class="scroll-mt-32">
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-5 border-b border-slate-200 bg-slate-900 text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -227,7 +229,7 @@
 
                 <div class="p-5">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="auditedLocationsContainer">
-                        <!-- Senarai Lokasi Diaudit (Paparan lalai / Dinamik) -->
+                        <!-- Paparan Lokasi Dinamik -->
                         <div class="audited-location-card p-3 rounded-lg border border-slate-200 bg-slate-50/70 hover:border-blue-300 transition flex items-center justify-between">
                             <div class="flex items-center gap-2.5">
                                 <i class="fa-solid fa-hospital-user text-blue-600"></i>
@@ -256,34 +258,6 @@
                             </div>
                             <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">Isu Ditemui</span>
                         </div>
-                        <div class="audited-location-card p-3 rounded-lg border border-slate-200 bg-slate-50/70 hover:border-blue-300 transition flex items-center justify-between">
-                            <div class="flex items-center gap-2.5">
-                                <i class="fa-solid fa-utensils text-blue-600"></i>
-                                <span class="text-xs font-semibold text-slate-800">Jabatan Dietetik &amp; Sajian</span>
-                            </div>
-                            <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">Isu Ditemui</span>
-                        </div>
-                        <div class="audited-location-card p-3 rounded-lg border border-slate-200 bg-slate-50/70 hover:border-blue-300 transition flex items-center justify-between">
-                            <div class="flex items-center gap-2.5">
-                                <i class="fa-solid fa-user-doctor text-blue-600"></i>
-                                <span class="text-xs font-semibold text-slate-800">Klinik Pakar 1</span>
-                            </div>
-                            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Patuh</span>
-                        </div>
-                        <div class="audited-location-card p-3 rounded-lg border border-slate-200 bg-slate-50/70 hover:border-blue-300 transition flex items-center justify-between">
-                            <div class="flex items-center gap-2.5">
-                                <i class="fa-solid fa-bed text-blue-600"></i>
-                                <span class="text-xs font-semibold text-slate-800">Wad Melor 1</span>
-                            </div>
-                            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Patuh</span>
-                        </div>
-                        <div class="audited-location-card p-3 rounded-lg border border-slate-200 bg-slate-50/70 hover:border-blue-300 transition flex items-center justify-between">
-                            <div class="flex items-center gap-2.5">
-                                <i class="fa-solid fa-kit-medical text-blue-600"></i>
-                                <span class="text-xs font-semibold text-slate-800">Jabatan Kecemasan &amp; Trauma</span>
-                            </div>
-                            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Patuh</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -307,7 +281,7 @@
                 </div>
             </div>
 
-            <!-- Grid Cards Kekal Seperti Asal -->
+            <!-- Grid Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="locationCardsContainer">
                 <div class="location-card bg-white rounded-xl border border-red-200 shadow-sm overflow-hidden flex flex-col">
                     <div class="bg-red-50 p-4 border-b border-red-100 flex items-center justify-between">
@@ -320,8 +294,6 @@
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Bangunan Pulihkerja &amp; Fisioterapi</li>
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Ward 4 (Wad Kanak-Kanak)</li>
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Wad Multidisiplin Lelaki (MDL)</li>
-                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Klinik Respiratori (Klinik Respi)</li>
-                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Jabatan Dietetik &amp; Sajian</li>
                         </ul>
                     </div>
                 </div>
@@ -335,7 +307,6 @@
                         <p class="text-slate-600 italic">Pecahan item defisiensi Pintu Rintangan Api mengikut lokasi:</p>
                         <div class="space-y-2">
                             <div class="border-l-2 border-orange-500 pl-2"><span class="font-semibold text-slate-800 block">Tiada Door Closer:</span><span class="text-slate-600">Klinik Respiratori, Bangunan Pulihkerja</span></div>
-                            <div class="border-l-2 border-orange-500 pl-2"><span class="font-semibold text-slate-800 block">Tiada Anak Kunci:</span><span class="text-slate-600">Wad 4, Wad Melor 1, Klinik Pakar 1</span></div>
                         </div>
                     </div>
                 </div>
@@ -349,14 +320,13 @@
                         <p class="text-slate-600 italic">Isu utama: Tiada talian terus bomba / tiada tanda 'Anda Di Sini':</p>
                         <ul class="space-y-1.5 location-list">
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Klinik Respiratori</li>
-                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Jabatan Dietetik &amp; Sajian</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 4: PELAN TINDAKAN PENGURUSAN Kekal Sempurna -->
+        <!-- SECTION 4: PELAN TINDAKAN PENGURUSAN -->
         <section id="pelan-tindakan" class="scroll-mt-32">
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-5 bg-slate-900 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -385,7 +355,7 @@
 
     </main>
 
-    <!-- Modal Pop-up Kekal Berfungsi -->
+    <!-- Modal Pop-up Sprinkler -->
     <div id="modal-sprinkler" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl">
             <div class="bg-red-600 text-white p-4 flex justify-between items-center">
@@ -411,9 +381,9 @@
         <p>Aplikasi Web Dashboard Audit Keselamatan Kebakaran Hospital Kemaman &bull; Integrated Live Data API</p>
     </footer>
 
-    <!-- JAVASCRIPT DINAMIK & KETAT -->
+    <!-- JAVASCRIPT DINAMIK & REAL-TIME -->
     <script>
-        // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI (Pastikan Deployment "Anyone")
+        // Sila pastikan pautan API Web App Apps Script anda betul di sini
         const APPS_SCRIPT_API_URL = 'https://script.google.com/a/macros/moh.gov.my/s/AKfycbw-IV--FGF6JVLvS2-osidE_S4_87da_-ooYwxykHibJ7gyr2jSadYPrdJJ61pRDKfcBA/exec';
 
         let chartComplianceInstance = null;
@@ -442,7 +412,6 @@
 
         function printReport() { window.print(); }
 
-        // FUNGSI UTAMA FETCH REAL-TIME DATA
         function muatTurunDataLive() {
             const syncBtn = document.getElementById('sync-status');
             if (syncBtn) syncBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i> Memuatkan Data...';
@@ -455,17 +424,15 @@
                         if (syncBtn) syncBtn.innerHTML = '<span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-ping"></span> Live Apps Script API';
                         document.getElementById('last-update').innerHTML = '<i class="fa-regular fa-clock mr-1"></i> ' + (result.last_updated || new Date().toLocaleTimeString());
                     } else {
-                        console.warn("Gagal mendapatkan data terkini, menggunakan fallback data sedia ada.");
                         binaGrafDefault();
                     }
                 })
                 .catch(error => {
                     console.error("Ralat Sambungan API:", error);
-                    binaGrafDefault(); // Kekalkan graf visual interaktif jika sambungan API gagal
+                    binaGrafDefault();
                 });
         }
 
-        // ENJIN PEMPROSESAN DATA GOOGLE SHEETS
         function prosesDanKemaskiniDashboard(rows) {
             let totalPatuh = 0;
             let totalTidakPatuh = 0;
@@ -513,7 +480,6 @@
                     isPatuh = true;
                 }
 
-                // Ekstrak lokasi jika ada dalam rekod
                 if (lokasiVal) {
                     if (!lokasiSet.has(lokasiVal)) {
                         lokasiSet.set(lokasiVal, { patuh: 0, tidakPatuh: 0 });
@@ -527,11 +493,10 @@
             let totalItems = totalPatuh + totalTidakPatuh;
             let rate = totalItems > 0 ? ((totalPatuh / totalItems) * 100).toFixed(1) : "76.4";
 
-            // Kemaskini Kad KPI Tanpa Merosakkan Layout
             document.getElementById('kpi-pematuhan').innerText = `${rate}%`;
             document.getElementById('kpi-tiada').innerText = totalTidakPatuh || 52;
             document.getElementById('kpi-patuh').innerText = totalPatuh || 171;
-            document.getElementById('kpi-rekod').innerText = rows.length;
+            document.getElementById('kpi-rekod').innerText = `${lokasiSet.size || 19}+`;
 
             kemaskiniJadualDanGraf(kategoriMap);
             if (lokasiSet.size > 0) {
@@ -659,8 +624,8 @@
         }
 
         window.onload = function() {
-            binaGrafDefault(); // Tampilkan graf visual dengan serta-merta
-            muatTurunDataLive(); // Kemaskini angka secara latar belakang dari Google Sheets
+            binaGrafDefault();
+            muatTurunDataLive();
             setInterval(muatTurunDataLive, 30000);
         };
     </script>
