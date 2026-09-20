@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ms" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Audit Keselamatan Kebakaran - Hospital Kemaman (LIVE)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="bg-red-600 p-2 rounded-lg text-white shadow-lg shadow-red-900/50">
+                        <i class="fa-solid fa-fire-extinguisher text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold leading-tight">Dashboard Audit Keselamatan Kebakaran</h1>
+                        <p class="text-xs text-slate-400">Hospital Kemaman &bull; Real-Time Apps Script API</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3 text-xs">
+                    <span id="sync-status" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-900/50 text-emerald-300 border border-emerald-700">
+                        <span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-ping"></span>
+                        Menyambung API...
+                    </span>
+                    <span id="last-update" class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md border border-slate-700 hidden sm:inline-block">
+                        <i class="fa-regular fa-clock mr-1"></i> Kemaskini: -
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVIGATION -->
+    <nav class="bg-white border-b border-slate-200 sticky top-16 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2 custom-scrollbar text-sm font-medium">
+                <button onclick="scrollToSection('ringkasan')" class="px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600"><i class="fa-solid fa-chart-pie mr-1.5"></i> Ringkasan Eksekutif</button>
+                <button onclick="scrollToSection('dapatan')" class="px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600"><i class="fa-solid fa-list-check mr-1.5"></i> Dapatan Audit</button>
+                <button onclick="scrollToSection('pelan-tindakan')" class="px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600"><i class="fa-solid fa-list-ol mr-1.5 text-amber-600"></i> Pelan Tindakan</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+        <!-- SECTION 1: RINGKASAN EKSEKUTIF KPI -->
+        <section id="ringkasan" class="scroll-mt-32">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Ringkasan Real-Time Audit</h2>
+                    <p class="text-sm text-slate-500">Statistik diproses secara langsung menerusi Google Apps Script Web API</p>
+                </div>
+                <button onclick="muatTurunDataLive()" class="bg-red-600 hover:bg-red-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-rotate"></i> Muat Semula Data
+                </button>
+            </div>
+
+            <!-- KPI Cards Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <!-- KPI 1 -->
+                <div class="glass-card rounded-xl p-4 border-l-4 border-l-emerald-500 shadow-sm">
+                    <span class="text-xs font-semibold uppercase text-slate-500">Pematuhan Keseluruhan</span>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-pematuhan" class="text-2xl font-bold text-slate-900">-%</span>
+                        <span id="kpi-status" class="text-xs text-emerald-600 font-medium">Memuatkan...</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-1">Purata pematuhan positif</p>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="glass-card rounded-xl p-4 border-l-4 border-l-red-500 shadow-sm">
+                    <span class="text-xs font-semibold uppercase text-slate-500">Jumlah "Tidak Patuh"</span>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-tiada" class="text-2xl font-bold text-red-600">-</span>
+                        <span class="text-xs text-red-500 font-medium">Isu Dikesan</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-1">Memerlukan tindakan pembetulan</p>
+                </div>
+
+                <!-- KPI 3 -->
+                <div class="glass-card rounded-xl p-4 border-l-4 border-l-emerald-600 shadow-sm">
+                    <span class="text-xs font-semibold uppercase text-slate-500">Jumlah "Patuh"</span>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-patuh" class="text-2xl font-bold text-emerald-600">-</span>
+                        <span class="text-xs text-emerald-600 font-medium">Item Patuh</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-1">Memenuhi piawaian keselamatan</p>
+                </div>
+
+                <!-- KPI 4 -->
+                <div class="glass-card rounded-xl p-4 border-l-4 border-l-blue-500 shadow-sm">
+                    <span class="text-xs font-semibold uppercase text-slate-500">Jumlah Rekod Audit</span>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-rekod" class="text-2xl font-bold text-slate-900">-</span>
+                        <span class="text-xs text-blue-600 font-medium">Entri Data</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-1">Daripada Google Sheets</p>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-chart-bar text-indigo-600 mr-2"></i>Kadar Pematuhan Mengikut Kategori (%)</h3>
+                    <div class="h-64 relative">
+                        <canvas id="complianceChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-chart-pie text-red-500 mr-2"></i>Pecahan Isu Ketidakpatuhan</h3>
+                    <div class="h-56 relative flex justify-center items-center">
+                        <canvas id="issuesDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: JADUAL DAPATAN AUDIT DINAMIK -->
+        <section id="dapatan" class="scroll-mt-32">
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                    <h3 class="text-lg font-bold text-slate-900">Perincian Komponen Keselamatan Kebakaran</h3>
+                    <span class="text-xs bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full font-medium">Live Apps Script API Data</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-slate-600">
+                        <thead class="text-xs uppercase bg-slate-100 text-slate-700 border-b border-slate-200">
+                            <tr>
+                                <th class="px-4 py-3">Kategori / Komponen</th>
+                                <th class="px-4 py-3 text-center text-emerald-600">Patuh</th>
+                                <th class="px-4 py-3 text-center text-red-600">Tidak Patuh</th>
+                                <th class="px-4 py-3 text-center">Pematuhan (%)</th>
+                                <th class="px-4 py-3">Penilaian Risiko</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jadual-dapatan-body" class="divide-y divide-slate-200">
+                            <tr>
+                                <td colspan="5" class="px-4 py-6 text-center text-slate-400">Memuatkan data daripada Google Sheets...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800 text-center">
+        <p>Dashboard Live Audit Keselamatan Kebakaran Hospital Kemaman &bull; Google Apps Script Web API</p>
+    </footer>
+
+    <!-- JAVASCRIPT REAL-TIME INTEGRATION -->
+    <script>
+        // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI
+        const APPS_SCRIPT_API_URL = 'https://script.google.com/a/macros/moh.gov.my/s/AKfycbwShpAk7KhzYPNpktWnl8SE235MBXjM-CMv5wVpyXHfW3I0HS6U4iBlrSNDYZmSHQiriw/exec';
+
+        let chartComplianceInstance = null;
+        let chartIssuesInstance = null;
+
+        function scrollToSection(id) {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // FUNGSI UTAMA UNTUK MENGAMBIL DATA STREAM DARI CODE.GS
+        function muatTurunDataLive() {
+            document.getElementById('sync-status').innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i> Memuatkan Data...';
+
+            fetch(APPS_SCRIPT_API_URL)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === "success") {
+                        prosesDataAudit(result.data);
+                        document.getElementById('sync-status').innerHTML = '<span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-ping"></span> Live Apps Script API';
+                        document.getElementById('last-update').innerHTML = '<i class="fa-regular fa-clock mr-1"></i> ' + (result.last_updated || new Date().toLocaleTimeString());
+                    } else {
+                        console.error("Ralat Balasan API:", result.message);
+                        document.getElementById('sync-status').innerHTML = '<span class="text-red-400"><i class="fa-solid fa-triangle-exclamation"></i> Ralat API</span>';
+                    }
+                })
+                .catch(error => {
+                    console.error("Gagal menyambung ke Apps Script:", error);
+                    document.getElementById('sync-status').innerHTML = '<span class="text-red-400"><i class="fa-solid fa-triangle-exclamation"></i> Terputus Sambungan</span>';
+                });
+        }
+
+        // ENJIN PEMPROSESAN DATA JSON
+        function prosesDataAudit(rows) {
+            let totalPatuh = 0;
+            let totalTidakPatuh = 0;
+            let kategoriMap = {};
+
+            rows.forEach(row => {
+                // Cari kunci dalam baris JSON (menyokong pelbagai variasi nama tajuk lajur)
+                let status = (row['Status'] || row['Status Pematuhan'] || row['Dapatan'] || '').toString().trim().toUpperCase();
+                let kategori = row['Kategori'] || row['Komponen'] || row['Kategori Bahaya'] || 'Umum';
+
+                if (!kategoriMap[kategori]) {
+                    kategoriMap[kategori] = { patuh: 0, tidakPatuh: 0 };
+                }
+
+                if (status.includes('PATUH') && !status.includes('TIDAK')) {
+                    totalPatuh++;
+                    kategoriMap[kategori].patuh++;
+                } else if (status.includes('TIDAK') || status.includes('GAGAL')) {
+                    totalTidakPatuh++;
+                    kategoriMap[kategori].tidakPatuh++;
+                }
+            });
+
+            let totalItems = totalPatuh + totalTidakPatuh;
+            let rateKeseluruhan = totalItems > 0 ? ((totalPatuh / totalItems) * 100).toFixed(1) : 0;
+
+            // Kemaskini Kad KPI
+            document.getElementById('kpi-pematuhan').innerText = `${rateKeseluruhan}%`;
+            document.getElementById('kpi-tiada').innerText = totalTidakPatuh;
+            document.getElementById('kpi-patuh').innerText = totalPatuh;
+            document.getElementById('kpi-rekod').innerText = rows.length;
+            document.getElementById('kpi-status').innerText = rateKeseluruhan >= 75 ? 'Sederhana Baik' : 'Risiko Tinggi';
+
+            kemaskiniJadualDanGraf(kategoriMap);
+        }
+
+        function kemaskiniJadualDanGraf(kategoriMap) {
+            const tbody = document.getElementById('jadual-dapatan-body');
+            tbody.innerHTML = '';
+
+            let labels = [];
+            let chartComplianceData = [];
+            let chartIssuesData = [];
+
+            for (let cat in kategoriMap) {
+                let patuh = kategoriMap[cat].patuh;
+                let tidakPatuh = kategoriMap[cat].tidakPatuh;
+                let total = patuh + tidakPatuh;
+                let rate = total > 0 ? ((patuh / total) * 100).toFixed(1) : 0;
+
+                labels.push(cat);
+                chartComplianceData.push(rate);
+                chartIssuesData.push(tidakPatuh);
+
+                let badge = rate >= 80 
+                    ? '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-semibold">CEMERLANG</span>'
+                    : (rate >= 60 
+                        ? '<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold">SEDERHANA</span>'
+                        : '<span class="px-2 py-0.5 rounded bg-red-100 text-red-800 font-semibold">KRITIKAL</span>');
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-4 py-3 font-medium text-slate-900">${cat}</td>
+                        <td class="px-4 py-3 text-center font-semibold text-emerald-600">${patuh}</td>
+                        <td class="px-4 py-3 text-center font-bold text-red-600 bg-red-50/50">${tidakPatuh}</td>
+                        <td class="px-4 py-3 text-center font-bold text-slate-800">${rate}%</td>
+                        <td class="px-4 py-3 text-xs">${badge}</td>
+                    </tr>
+                `;
+            }
+
+            renderChartCompliance(labels, chartComplianceData);
+            renderChartIssues(labels, chartIssuesData);
+        }
+
+        function renderChartCompliance(labels, dataValues) {
+            const ctx = document.getElementById('complianceChart').getContext('2d');
+            if (chartComplianceInstance) chartComplianceInstance.destroy();
+
+            chartComplianceInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Kadar Pematuhan Positif (%)',
+                        data: dataValues,
+                        backgroundColor: '#0F2C59',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 100 } }
+                }
+            });
+        }
+
+        function renderChartIssues(labels, dataValues) {
+            const ctx = document.getElementById('issuesDistributionChart').getContext('2d');
+            if (chartIssuesInstance) chartIssuesInstance.destroy();
+
+            chartIssuesInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: ['#f97316', '#14b8a6', '#ef4444', '#06b6d4', '#0284c7', '#6366f1', '#d97706']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        // Jalankan Muat Turun Data Automatik Apabila Laman Dibuka & Ulangi Setiap 30 Saat
+        window.onload = function() {
+            muatTurunDataLive();
+            setInterval(muatTurunDataLive, 30000);
+        };
+    </script>
+</body>
+</html>
