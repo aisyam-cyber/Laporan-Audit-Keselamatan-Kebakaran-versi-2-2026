@@ -69,7 +69,7 @@
             <div class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2 custom-scrollbar text-sm font-medium">
                 <button onclick="scrollToSection('ringkasan')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 active-nav text-nowrap"><i class="fa-solid fa-chart-pie mr-1.5"></i> Ringkasan Eksekutif</button>
                 <button onclick="scrollToSection('dapatan')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap"><i class="fa-solid fa-list-check mr-1.5"></i> Dapatan Audit</button>
-                <button onclick="bukaModalSenaraiLokasi()" class="nav-btn px-3 py-2 rounded-md hover:bg-blue-50 text-blue-600 text-nowrap font-bold"><i class="fa-solid fa-hospital mr-1.5"></i> Lokasi Diaudit</button>
+                <button onclick="scrollToSection('senarai-semua-lokasi')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap font-semibold"><i class="fa-solid fa-building-circle-check mr-1.5 text-blue-600"></i> Lokasi Diaudit (Lajur B)</button>
                 <button onclick="scrollToSection('lokasi-isu')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap"><i class="fa-solid fa-map-location-dot mr-1.5 text-red-600"></i> Lokasi Isu (Tiada)</button>
                 <button onclick="scrollToSection('pelan-tindakan')" class="nav-btn px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600 text-nowrap"><i class="fa-solid fa-list-ol mr-1.5 text-amber-600"></i> Pelan Tindakan Pengurusan</button>
             </div>
@@ -136,8 +136,8 @@
                     <p class="text-[11px] text-slate-500 mt-1">Memenuhi piawaian keselamatan</p>
                 </div>
 
-                <!-- KPI 4: KAD JUMLAH LOKASI AUDIT (BOLEH DIKLIK PENGARAH UNTUK POP-UP SENARAI LOKASI) -->
-                <div onclick="bukaModalSenaraiLokasi()" class="glass-card rounded-xl p-4 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition cursor-pointer group bg-blue-50/20 hover:bg-blue-50/70 border border-blue-100 relative">
+                <!-- KPI 4 (JUMLAH LOKASI AUDIT - INTERAKTIF & DIHUBUNGKAN TERUS KE SECTION LOKASI LAJUR B) -->
+                <div onclick="scrollToSection('senarai-semua-lokasi')" class="glass-card rounded-xl p-4 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition cursor-pointer group bg-blue-50/20 hover:bg-blue-50/70 border border-blue-100 relative">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-semibold uppercase tracking-wider text-slate-600 group-hover:text-blue-900">Jumlah Lokasi Audit</span>
                         <span class="p-2 bg-blue-100 text-blue-700 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition"><i class="fa-solid fa-hospital"></i></span>
@@ -145,10 +145,10 @@
                     <div class="mt-2 flex items-baseline gap-2">
                         <span id="kpi-rekod" class="text-2xl font-bold text-slate-900">19+</span>
                         <span class="text-xs text-blue-600 font-bold group-hover:underline flex items-center gap-1">
-                            Semak Senarai <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            Semak Senarai <i class="fa-solid fa-arrow-down text-[10px]"></i>
                         </span>
                     </div>
-                    <p class="text-[11px] text-blue-600 font-medium mt-1"><i class="fa-solid fa-hand-pointer mr-1"></i> Klik untuk senarai lokasi/wad</p>
+                    <p class="text-[11px] text-blue-600 font-medium mt-1"><i class="fa-solid fa-hand-pointer mr-1"></i> Klik untuk senarai Jabatan/Unit/Wad</p>
                 </div>
             </div>
 
@@ -210,7 +210,34 @@
             </div>
         </section>
 
-        <!-- SECTION 3: SENARAI SPESIFIK LOKASI ISU (TIADA) -->
+        <!-- SECTION 3: SENARAI LOKASI DARI LAJUR B GOOGLE SHEETS -->
+        <section id="senarai-semua-lokasi" class="scroll-mt-32">
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-slate-200 bg-slate-900 text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-building-circle-check text-blue-400 text-lg"></i>
+                            <h2 class="text-lg font-bold">Senarai Lokasi Telah Diaudit (Lajur B Google Sheets)</h2>
+                        </div>
+                        <p class="text-xs text-slate-300 mt-0.5">Analisis langsung senarai Jabatan / Unit / Wad dari pengkalan data Google Sheets</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="relative text-slate-800">
+                            <input type="text" id="auditLocationSearch" onkeyup="filterAuditedLocations()" placeholder="Cari Jabatan/Unit/Wad..." class="pl-8 pr-3 py-1.5 bg-white text-xs rounded-lg border-0 focus:ring-2 focus:ring-blue-500 shadow-inner w-48 sm:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-slate-400 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="auditedLocationsContainer">
+                        <!-- Paparan Lokasi Dinamik Lajur B Dijana Oleh JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: SENARAI SPESIFIK LOKASI ISU (TIADA) -->
         <section id="lokasi-isu" class="scroll-mt-32">
             <div class="bg-gradient-to-r from-red-900 to-slate-900 rounded-xl text-white p-6 shadow-md mb-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -241,8 +268,6 @@
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Bangunan Pulihkerja &amp; Fisioterapi</li>
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Ward 4 (Wad Kanak-Kanak)</li>
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Wad Multidisiplin Lelaki (MDL)</li>
-                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Klinik Respiratori (Klinik Respi)</li>
-                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-100"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> Jabatan Dietetik &amp; Sajian</li>
                         </ul>
                     </div>
                 </div>
@@ -256,7 +281,6 @@
                         <p class="text-slate-600 italic">Pecahan item defisiensi Pintu Rintangan Api mengikut lokasi:</p>
                         <div class="space-y-2">
                             <div class="border-l-2 border-orange-500 pl-2"><span class="font-semibold text-slate-800 block">Tiada Door Closer:</span><span class="text-slate-600">Klinik Respiratori, Bangunan Pulihkerja</span></div>
-                            <div class="border-l-2 border-orange-500 pl-2"><span class="font-semibold text-slate-800 block">Tiada Anak Kunci:</span><span class="text-slate-600">Wad 4, Wad Melor 1, Klinik Pakar 1</span></div>
                         </div>
                     </div>
                 </div>
@@ -270,14 +294,13 @@
                         <p class="text-slate-600 italic">Isu utama: Tiada talian terus bomba / tiada tanda 'Anda Di Sini':</p>
                         <ul class="space-y-1.5 location-list">
                             <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Klinik Respiratori</li>
-                            <li class="flex items-start gap-2 text-slate-700 bg-slate-50 p-1.5 rounded"><i class="fa-solid fa-circle-exclamation text-teal-500 mt-0.5"></i> Jabatan Dietetik &amp; Sajian</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 4: PELAN TINDAKAN PENGURUSAN Kekal Sempurna -->
+        <!-- SECTION 5: PELAN TINDAKAN PENGURUSAN -->
         <section id="pelan-tindakan" class="scroll-mt-32">
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-5 bg-slate-900 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -306,14 +329,14 @@
 
     </main>
 
-    <!-- MODAL POP-UP KHAS PENGARAH: SENARAI LOKASI TELAH DIAUDIT -->
+    <!-- MODAL POP-UP UNTUK SEMAK SENARAI LOKASI AUDIT -->
     <div id="modal-senarai-lokasi" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl transform transition-all flex flex-col max-h-[90vh]">
             <div class="bg-blue-900 text-white p-4 flex justify-between items-center border-b border-blue-800">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-hospital text-blue-300 text-lg"></i>
                     <div>
-                        <h3 class="font-bold text-base leading-tight">Senarai Lokasi &amp; Wad Telah Diaudit</h3>
+                        <h3 class="font-bold text-base leading-tight">Senarai Lokasi &amp; Wad Telah Diaudit (Lajur B)</h3>
                         <p class="text-xs text-blue-200">Rekod pematuhan dikemaskini secara live dari Google Sheets</p>
                     </div>
                 </div>
@@ -322,7 +345,7 @@
             
             <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div class="relative w-full sm:w-72">
-                    <input type="text" id="cariModalLokasiInput" onkeyup="tapisJadualModalLokasi()" placeholder="Cari nama lokasi / wad..." class="w-full pl-9 pr-4 py-1.5 bg-white rounded-lg text-xs border border-slate-300 focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="cariModalLokasiInput" onkeyup="tapisJadualModalLokasi()" placeholder="Cari Jabatan/Unit/Wad..." class="w-full pl-9 pr-4 py-1.5 bg-white rounded-lg text-xs border border-slate-300 focus:ring-2 focus:ring-blue-500">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
                 </div>
                 <span class="text-xs text-slate-600 font-bold" id="jumlah-modal-lokasi-counter">Memuatkan lokasi...</span>
@@ -333,7 +356,7 @@
                     <thead class="text-[11px] uppercase bg-slate-100 text-slate-800 border-b border-slate-300 sticky top-0">
                         <tr>
                             <th class="px-3 py-2 text-center">Bil</th>
-                            <th class="px-3 py-2">Nama Lokasi / Wad / Jabatan</th>
+                            <th class="px-3 py-2">Nama Jabatan / Unit / Wad (Lajur B)</th>
                             <th class="px-3 py-2 text-center">Jumlah Item</th>
                             <th class="px-3 py-2 text-center text-emerald-600">Patuh</th>
                             <th class="px-3 py-2 text-center text-red-600">Tidak Patuh</th>
@@ -381,9 +404,8 @@
         <p>Aplikasi Web Dashboard Audit Keselamatan Kebakaran Hospital Kemaman &bull; Integrated Live Data API</p>
     </footer>
 
-    <!-- JAVASCRIPT DINAMIK & REAL-TIME -->
+    <!-- JAVASCRIPT DINAMIK & REAL-TIME (ANALISIS KHAS LAJUR B GOOGLE SHEETS) -->
     <script>
-        // SILA PASTIKAN URL APPS SCRIPT ANDA SEBENAR
         const APPS_SCRIPT_API_URL = 'https://script.google.com/a/macros/moh.gov.my/s/AKfycbw-IV--FGF6JVLvS2-osidE_S4_87da_-ooYwxykHibJ7gyr2jSadYPrdJJ61pRDKfcBA/exec';
 
         let chartComplianceInstance = null;
@@ -439,6 +461,7 @@
                 });
         }
 
+        // ENJIN PEMPROSESAN DATA - MENETAPKAN LAJUR B DENGAN PATTERN CHECKING
         function prosesDanKemaskiniDashboard(rows) {
             let totalPatuh = 0;
             let totalTidakPatuh = 0;
@@ -450,18 +473,20 @@
                 let kategoriVal = "";
                 let lokasiVal = "";
 
+                // Semak secara khusus kunci tajuk lajur B (Nama Jabatan/Unit/Wad yang di audit)
                 for (let key in row) {
                     let k = key.toLowerCase().trim();
                     let v = row[key] ? row[key].toString().trim() : "";
 
+                    // Pengecaman Lajur B (Nama Jabatan / Unit / Wad)
+                    if (k.includes('nama jabatan') || k.includes('unit') || k.includes('wad') || k.includes('audit') || k.includes('lokasi')) {
+                        if (v !== "" && !lokasiVal) lokasiVal = v;
+                    }
                     if (k.includes('status') || k.includes('dapatan') || k.includes('pematuhan') || k.includes('ada') || k.includes('ya')) {
                         if (v !== "") statusVal = v.toUpperCase();
                     }
                     if (k.includes('kategori') || k.includes('komponen') || k.includes('item') || k.includes('bahaya')) {
                         if (v !== "") kategoriVal = v;
-                    }
-                    if (k.includes('lokasi') || k.includes('wad') || k.includes('tempat') || k.includes('zon') || k.includes('bangunan')) {
-                        if (v !== "") lokasiVal = v;
                     }
                 }
 
@@ -486,6 +511,7 @@
                     isPatuh = true;
                 }
 
+                // Masukkan nama lokasi Lajur B jika ditemui
                 if (lokasiVal) {
                     if (!lokasiSet.has(lokasiVal)) {
                         lokasiSet.set(lokasiVal, { patuh: 0, tidakPatuh: 0 });
@@ -511,6 +537,7 @@
             }
         }
 
+        // KEMASKINI KAD GRID LOKASI LAJUR B
         function kemaskiniSenaraiLokasiDiaudit(lokasiSet) {
             const container = document.getElementById('auditedLocationsContainer');
             if (!container) return;
@@ -533,6 +560,7 @@
             });
         }
 
+        // POPULATE JADUAL POP-UP MODAL DENGAN SENARAI LAJUR B
         function binaJadualModalLokasi(lokasiSet) {
             const tbody = document.getElementById('jadual-modal-lokasi-body');
             if (!tbody) return;
@@ -540,7 +568,7 @@
 
             let index = 1;
             let totalLokasi = lokasiSet.size;
-            document.getElementById('jumlah-modal-lokasi-counter').innerText = `Jumlah: ${totalLokasi} Lokasi/Wad Diaudit`;
+            document.getElementById('jumlah-modal-lokasi-counter').innerText = `Jumlah: ${totalLokasi} Jabatan/Unit/Wad Diaudit`;
 
             lokasiSet.forEach((stat, namaLokasi) => {
                 let patuh = stat.patuh;
