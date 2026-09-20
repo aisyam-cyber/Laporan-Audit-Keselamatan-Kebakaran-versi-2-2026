@@ -58,7 +58,6 @@
             <div class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2 custom-scrollbar text-sm font-medium">
                 <button onclick="scrollToSection('ringkasan')" class="px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600"><i class="fa-solid fa-chart-pie mr-1.5"></i> Ringkasan Eksekutif</button>
                 <button onclick="scrollToSection('dapatan')" class="px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600"><i class="fa-solid fa-list-check mr-1.5"></i> Dapatan Audit</button>
-                <button onclick="scrollToSection('pelan-tindakan')" class="px-3 py-2 rounded-md hover:bg-slate-100 text-slate-600"><i class="fa-solid fa-list-ol mr-1.5 text-amber-600"></i> Pelan Tindakan</button>
             </div>
         </div>
     </nav>
@@ -174,8 +173,8 @@
 
     <!-- JAVASCRIPT REAL-TIME INTEGRATION -->
     <script>
-        // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI
-        const APPS_SCRIPT_API_URL = 'https://script.google.com/a/macros/moh.gov.my/s/AKfycbwShpAk7KhzYPNpktWnl8SE235MBXjM-CMv5wVpyXHfW3I0HS6U4iBlrSNDYZmSHQiriw/exec';
+        // MASUKKAN URL WEB APP BAHARU ANDA DI SINI (URL YANG DIDEPLOY UNTUK "ANYONE")
+        const APPS_SCRIPT_API_URL = 'https://script.google.com/a/macros/moh.gov.my/s/AKfycbwTGkSi7XNUWsZ1Br22yxKdW7npJ6QAJoBLVlvtr0NX_raYlLtsekEmEpRGwqlxRnFO3g/exec';
 
         let chartComplianceInstance = null;
         let chartIssuesInstance = null;
@@ -184,15 +183,14 @@
             document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // FUNGSI UTAMA UNTUK MENGAMBIL DATA STREAM DARI CODE.GS
         function muatTurunDataLive() {
             document.getElementById('sync-status').innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i> Memuatkan Data...';
 
             fetch(APPS_SCRIPT_API_URL)
                 .then(response => response.json())
                 .then(result => {
-                    if (result.status === "success") {
-                        prosesDataAudit(result.data);
+                    if (result.status === "success" && result.data) {
+                        prosesDataAuditPintar(result.data);
                         document.getElementById('sync-status').innerHTML = '<span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-ping"></span> Live Apps Script API';
                         document.getElementById('last-update').innerHTML = '<i class="fa-regular fa-clock mr-1"></i> ' + (result.last_updated || new Date().toLocaleTimeString());
                     } else {
@@ -206,27 +204,48 @@
                 });
         }
 
-        // ENJIN PEMPROSESAN DATA JSON
-        function prosesDataAudit(rows) {
+        // ENJIN PEMPROSESAN DATA PINTAR (SMART DATA DETECTOR)
+        function prosesDataAuditPintar(rows) {
             let totalPatuh = 0;
             let totalTidakPatuh = 0;
             let kategoriMap = {};
 
             rows.forEach(row => {
-                // Cari kunci dalam baris JSON (menyokong pelbagai variasi nama tajuk lajur)
-                let status = (row['Status'] || row['Status Pematuhan'] || row['Dapatan'] || '').toString().trim().toUpperCase();
-                let kategori = row['Kategori'] || row['Komponen'] || row['Kategori Bahaya'] || 'Umum';
+                let statusValue = "";
+                let kategoriValue = "";
 
-                if (!kategoriMap[kategori]) {
-                    kategoriMap[kategori] = { patuh: 0, tidakPatuh: 0 };
+                // Semak semua kemungkinan nama kunci tajuk lajur secara automatik
+                for (let key in row) {
+                    let cleanKey = key.toLowerCase().trim();
+                    let val = row[key] ? row[key].toString().trim() : "";
+
+                    if (cleanKey.includes('status') || cleanKey.includes('dapatan') || cleanKey.includes('pematuhan') || cleanKey.includes('ada') || cleanKey.includes('ya')) {
+                        if (val !== "") statusValue = val.toUpperCase();
+                    }
+                    if (cleanKey.includes('kategori') || cleanKey.includes('komponen') || cleanKey.includes('item') || cleanKey.includes('perkara') || cleanKey.includes('bahaya')) {
+                        if (val !== "") kategoriValue = val;
+                    }
                 }
 
-                if (status.includes('PATUH') && !status.includes('TIDAK')) {
+                if (!kategoriValue) kategoriValue = 'Umum / Peralatan';
+
+                if (!kategoriMap[kategoriValue]) {
+                    kategoriMap[kategoriValue] = { patuh: 0, tidakPatuh: 0 };
+                }
+
+                // Pengelasan Status
+                if (statusValue.includes('PATUH') || statusValue.includes('YA') || statusValue.includes('ADA') || statusValue.includes('BAIK') || statusValue === '1') {
                     totalPatuh++;
-                    kategoriMap[kategori].patuh++;
-                } else if (status.includes('TIDAK') || status.includes('GAGAL')) {
+                    kategoriMap[kategoriValue].patuh++;
+                } else if (statusValue.includes('TIDAK') || statusValue.includes('GAGAL') || statusValue.includes('TIADA') || statusValue.includes('ROSAK') || statusValue === '0') {
                     totalTidakPatuh++;
-                    kategoriMap[kategori].tidakPatuh++;
+                    kategoriMap[kategoriValue].tidakPatuh++;
+                } else {
+                    // Jika data wujud tetapi tiada kata kunci khas, andaikan patuh jika tidak bertanda negatif
+                    if (statusValue !== "") {
+                        totalPatuh++;
+                        kategoriMap[kategoriValue].patuh++;
+                    }
                 }
             });
 
@@ -326,7 +345,6 @@
             });
         }
 
-        // Jalankan Muat Turun Data Automatik Apabila Laman Dibuka & Ulangi Setiap 30 Saat
         window.onload = function() {
             muatTurunDataLive();
             setInterval(muatTurunDataLive, 30000);
